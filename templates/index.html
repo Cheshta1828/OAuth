@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login with Google</title>
+</head>
+<body>
+    <button id="loginButton">Login with Google</button>
+
+    <script>
+        document.getElementById("loginButton").addEventListener("click", function() {
+            // Replace with your app's details
+            var clientId = '529987872398-5jgp6kl638lh2mlt0nvpq145p3mk3b5c.apps.googleusercontent.com';
+            var redirectUri = 'http://127.0.0.1:8000';
+            var scope = 'profile email'; // Requested permissions
+
+            var authUrl = `https://accounts.google.com/o/oauth2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=code&include_granted_scopes=true&access_type=offline&state=state_parameter_passthrough_value`;
+            window.location.href = authUrl;
+        });
+    </script>
+    <script>
+        // Function to extract URL parameters
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+    
+        // Extract authorization code from URL parameter
+        var authorizationCode = getUrlParameter('code');
+    
+        // Print authorization code to console
+        if (authorizationCode) {
+            console.log('Authorization Code:', authorizationCode);
+
+            // Now exchange the authorization code for an access token
+            var curlCommand = `curl -X POST https://oauth2.googleapis.com/token \\
+            -d "code=${authorizationCode}" \\
+            -d "client_id=529987872398-5jgp6kl638lh2mlt0nvpq145p3mk3b5c.apps.googleusercontent.com" \\
+            -d "client_secret=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" \\
+            -d "redirect_uri=http://127.0.0.1:8000" \\
+            -d "grant_type=authorization_code"`;
+
+            console.log('cURL Command:', curlCommand);
+        }
+    </script>
+</body>
+</html>
