@@ -16,6 +16,13 @@ from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 
 from social_django.utils import psa
+from social_django.utils import load_backend, load_strategy
+from social_core.backends.oauth import BaseOAuth2
+from oauth2_provider.models import AccessToken
+from django.contrib.auth import get_user_model
+from django.contrib.auth.backends import ModelBackend
+
+User = get_user_model()
 
 from requests.exceptions import HTTPError
 
@@ -69,6 +76,29 @@ class LoginView(APIView):
             return Response({'error': 'Invalid username or password'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
+# class GoogleLoginView(APIView):
+#     def post(self, request):
+#         access_token = request.data.get("access_token")
+        
+#         if access_token:
+#             user = GoogleAccessTokenAuthentication().authenticate(request, access_token=access_token)
+            
+#             if user:
+#                 access_token, _ = AccessToken.objects.get_or_create(user=user)
+#                 return Response({"token": access_token.token}, status=status.HTTP_200_OK)
+#             else:
+#                 return Response({"error": "Invalid access token"}, status=status.HTTP_401_UNAUTHORIZED)
+#         else:
+#             return Response({"error": "Access token is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+
+
+
     
 
 
@@ -103,8 +133,7 @@ def register_by_access_token(request, backend):
             },
             status=status.HTTP_400_BAD_REQUEST,
         )
-
-
+    
 @api_view(['GET', 'POST'])
 def authentication_test(request):
     print(request.user)
@@ -114,3 +143,32 @@ def authentication_test(request):
         },
         status=status.HTTP_200_OK,
     )
+# @api_view(['POST'])
+# @permission_classes([AllowAny])
+# @psa()
+# def authenticate_with_token(request, backend):
+#     strategy = load_strategy()
+#     backend = load_backend(strategy=strategy, name=backend, redirect_uri=None)
+
+#     if isinstance(backend, BaseOAuth2):
+#         access_token = request.data.get('access_token')
+#         user = backend.do_auth(access_token)
+#         if user:
+#             return user
+
+#     user = authenticate_with_token(request, backend)  # Pass the correct parameters
+
+#     if user:
+#         print("User authenticated:", user)
+#     else:
+#         print("Authentication failed")
+
+
+
+
+
+
+
+
+
+

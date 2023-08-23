@@ -26,8 +26,8 @@ from django.urls import path, re_path
 urlpatterns = [
     path('register/', CustomUserCreate.as_view()),
     path('login/', LoginView.as_view()),
-    #re_path('api/register-by-access-token/' + r'social/(?P<backend>[^/]+)/$', views.register_by_access_token),
-    #path('api/authentication-test/', views.authentication_test),
+    re_path('api/register-by-access-token/' + r'social/(?P<backend>[^/]+)/$', views.register_by_access_token),
+    path('api/authentication-test/', views.authentication_test),
     
    
 ]
